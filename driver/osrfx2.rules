@@ -1,0 +1,18 @@
+#------------------------------------------------------------------------------
+#
+# osrfx2.rules - udev rules for the OSR USBFX2 Learning Kit device.
+#
+# see http://www.reactivated.net/writing_udev_rules.html for details.
+#------------------------------------------------------------------------------
+#
+# No idea if this is correct or not the RUN commands to assign a group to the sysfs attributes switchwes, 7segment and bargraph.
+# By setting the device to 0660; the code sets the switches to 0440 and 7segment and bargraph to 0660.  The run allows access by adding it to the plugdev group.
+# If your a member of that group you have access...  Still want to know if this is the "right' way or if there is a better way.  At least now I can pluf the thing in 
+# and my driver doesn't need sudo to run!  
+#
+# # udevadm control --reload-rules
+
+#ACTION=="add", KERNEL=="osrfx2_*", SUBSYSTEM=="usbmisc", ATTRS{idVendor}=="0547", ATTRS{idProduct}=="1002",MODE="0666"
+KERNEL=="osrfx2_*",SUBSYSTEM=="usbmisc", ATTRS{idVendor}=="0547", ATTRS{idProduct}=="1002",MODE="0660",GROUP="plugdev", RUN+="/bin/chgrp plugdev /sys/class/usbmisc/osrfx2_0/device/switches", RUN+="/bin/chgrp plugdev /sys/class/usbmisc/osrfx2_0/device/7segment", RUN+="/bin/chgrp plugdev /sys/class/usbmisc/osrfx2_0/device/bargraph"
+
+
